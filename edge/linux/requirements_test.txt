@@ -1,0 +1,15 @@
+# Local test harness — replaces headless OpenCV with the full GUI build.
+# Install with:
+#   pip install -r requirements_test.txt
+#
+# opencv-python-headless (used on the UNO Q) strips the GUI backend,
+# so cv2.imshow silently does nothing. The full opencv-python package is
+# required to see the webcam window on a dev machine.
+
+opencv-python>=4.8           # GUI-enabled build (replaces opencv-python-headless)
+onnxruntime>=1.17.0
+numpy>=1.24
+google-genai>=1.0
+google-auth>=2.20
+awsiotsdk>=1.0
+python-dotenv>=1.0
