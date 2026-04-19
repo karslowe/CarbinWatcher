@@ -148,8 +148,13 @@ class TrashDetector:
             boxes_cls  = np.stack([x1[idx], y1[idx], x2[idx], y2[idx]], axis=1).astype(float)
             scores_cls = confidences[idx]
 
+            nms_boxes = [
+                [float(x1[idx[i]]), float(y1[idx[i]]),
+                 float(x2[idx[i]] - x1[idx[i]]), float(y2[idx[i]] - y1[idx[i]])]
+                for i in range(len(idx))
+            ]
             keep = cv2.dnn.NMSBoxes(
-                bboxes=boxes_cls[:, :2].tolist(),  # cv2 wants x,y,w,h
+                bboxes=nms_boxes,
                 scores=scores_cls.tolist(),
                 score_threshold=self.threshold,
                 nms_threshold=0.45,

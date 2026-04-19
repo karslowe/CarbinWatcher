@@ -1,7 +1,8 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(Path(__file__).parent / ".env")
 
 
 class Config:
@@ -35,10 +36,14 @@ class Config:
     SERIAL_PORT: str = os.getenv("SERIAL_PORT", "/dev/ttyACM0")
     SERIAL_BAUD: int = int(os.getenv("SERIAL_BAUD", "115200"))
 
-    # AWS S3
-    S3_BUCKET: str = os.getenv("S3_BUCKET", "carbinwatcher-raw")
-    AWS_REGION: str = os.getenv("AWS_REGION", "us-east-1")
+    # AWS IoT Core / MQTT
+    IOT_ENDPOINT: str = os.getenv("AWS_IOT_ENDPOINT", "")
+    IOT_CERT_PATH: str = os.getenv("AWS_IOT_CERT_PATH", "~/carbinwatcher-certs/cert.pem.crt")
+    IOT_KEY_PATH: str = os.getenv("AWS_IOT_KEY_PATH", "~/carbinwatcher-certs/private.pem.key")
+    IOT_ROOT_CA_PATH: str = os.getenv("AWS_IOT_ROOT_CA_PATH", "~/carbinwatcher-certs/AmazonRootCA1.pem")
+    _thing_suffix: str = THING_NAME.replace("carbinwatcher-", "", 1)
+    MQTT_TOPIC: str = os.getenv("MQTT_TOPIC", f"carbinwatcher/{_thing_suffix}/classifications")
 
     # Gemini
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite-preview")

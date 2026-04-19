@@ -13,12 +13,11 @@ cryptography==46.0.7
 databricks-sql-connector==4.2.5
 et_xmlfile==2.0.0
 fastapi==0.136.0
-google-ai-generativelanguage==0.6.15
 google-api-core==2.30.3
 google-api-python-client==2.194.0
 google-auth==2.49.2
 google-auth-httplib2==0.3.1
-google-generativeai==0.8.6
+google-genai>=1.0
 googleapis-common-protos==1.74.0
 grpcio==1.80.0
 grpcio-status==1.71.2

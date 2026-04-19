@@ -9,7 +9,8 @@ from __future__ import annotations
 import json
 import logging
 
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 log = logging.getLogger(__name__)
 
@@ -47,19 +48,17 @@ def _rule_correct(label: str, bin_type: str) -> tuple[bool, str]:
 
 class BinVerifier:
     def __init__(self, api_key: str, model: str = "gemini-1.5-flash"):
+        self._model_name = model
+        self._config = types.GenerateContentConfig(system_instruction=_SYSTEM)
         if api_key:
-            genai.configure(api_key=api_key)
-            self._model = genai.GenerativeModel(
-                model_name=model,
-                system_instruction=_SYSTEM,
-            )
+            self._client = genai.Client(api_key=api_key)
         else:
-            self._model = None
+            self._client = None
             log.warning("GEMINI_API_KEY not set — using rule-based bin verification only")
 
     def verify(self, item_label: str, bin_type: str) -> tuple[bool, str]:
         """Return (placement_is_correct, reason_string)."""
-        if self._model is None:
+        if self._client is None:
             return _rule_correct(item_label, bin_type)
 
         prompt = (
@@ -68,8 +67,11 @@ class BinVerifier:
             "Is this correct?"
         )
         try:
-            resp = self._model.generate_content(prompt)
-            data = json.loads(resp.text.strip())
+            resp = self._client.models.generate_content(
+                model=self._model_name, config=self._config, contents=prompt
+            )
+            text = resp.text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+            data = json.loads(text)
             return bool(data.get("correct", False)), str(data.get("reason", ""))
         except Exception as exc:
             log.warning("Gemini verification failed (%s) — falling back to rules", exc)

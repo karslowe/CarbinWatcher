@@ -32,7 +32,7 @@ log = logging.getLogger("carbinwatcher")
 
 
 def _open_camera() -> cv2.VideoCapture:
-    cap = cv2.VideoCapture(Config.CAMERA_INDEX)
+    cap = cv2.VideoCapture(Config.CAMERA_INDEX, cv2.CAP_DSHOW)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, Config.FRAME_WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, Config.FRAME_HEIGHT)
     if not cap.isOpened():
