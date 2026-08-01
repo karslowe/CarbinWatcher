@@ -53,3 +53,7 @@ Thumbs.db
 
 # Logs
 *.log
+notebooks/runs/
+notebooks/carbinwatcher_data/
+*.zip
+*Zone.Identifier*
